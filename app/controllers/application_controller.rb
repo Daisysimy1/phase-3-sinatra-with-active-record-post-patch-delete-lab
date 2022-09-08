@@ -1,5 +1,10 @@
+require "pry"
 class ApplicationController < Sinatra::Base
   set default_content_type: "application/json"
+
+  get '/' do
+    "Hello World"
+  end
   
   get '/bakeries' do
     bakeries = Bakery.all
@@ -22,5 +27,30 @@ class ApplicationController < Sinatra::Base
     baked_good = BakedGood.by_price.first
     baked_good.to_json
   end
+
+  post '/baked_goods' do
+    new_bake = BakedGood.create(
+      name: params[:name],
+      price: params[:price],
+      bakery_id: params[:bakery_id]
+    )
+    new_bake.to_json
+  end
+
+  patch '/bakeries/:id' do
+    bakery = Bakery.find(params[:id])
+    bakery.update(
+      name: params[:name]
+    )
+
+    bakery.to_json
+  end
+
+  delete '/baked_goods/:id' do
+    baked_good = BakedGood.find(params[:id])
+    baked_good.destroy
+    baked_good.to_json
+  end
+
 
 end
